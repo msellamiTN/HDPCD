@@ -1,8 +1,18 @@
 1) To SCP into hortonworks sandbox use the below command
-    scp file-name root@192.168.28.129:/root/data
+	scp file-name root@192.168.28.129:/root/data
     
 2) To create a folder under /user directory :
-    sudo -u hdfs hadoop fs -mkdir /user/root
+	sudo -u hdfs hadoop fs -mkdir /user/root
     
 3) To change the owner of the new directory to root :
-    sudo -u hdfs hadoop fs -chown root:hdfs /user/root
+	sudo -u hdfs hadoop fs -chown root:hdfs /user/root
+
+4) To copy a file from local file system to HDFS:
+	* First Create A File using : touch testing1.txt (under root or any directory)
+	* Edit it using : vi testing1.txt
+	* Use Command : hadoop fs -copyFromLocal /root/testing1.txt /user/root
+	* Use Command : hadoop fs -put /root/testing1.txt /user/root ( alternative )
+	* To Verify : hadoop fs -ls /user/root ( list all files under /user/root)
+	* To display contents of a file : hadoop fs -cat /user/root/testing1.txt
+	* To connect to a different IP address use : hadoop fs -ls hdfs://192.168.28.129/user/root (hdfs://{ip-address}/{directory})
+	

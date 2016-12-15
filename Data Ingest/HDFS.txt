@@ -15,4 +15,11 @@
 	* To Verify : hadoop fs -ls /user/root ( list all files under /user/root)
 	* To display contents of a file : hadoop fs -cat /user/root/testing1.txt
 	* To connect to a different IP address use : hadoop fs -ls hdfs://192.168.28.129/user/root (hdfs://{ip-address}/{directory})
+
+5) mkdir
+	* To create a user space in HDFS use mkdir
+	* Use -p to recursively create directories : hadoop fs -mkdir /user/root/dir1/dir2/dir3
+	* To Verify use : hadoop fs -ls -R /user/root
+	* Use Patterns in mkdir : hadoop fs -mkdir /user/root/t{1,2} (t{1..10})
+	* Use Ip address : hadoop fs -mkdir hdfs://192.168.28.129/user/root/a1 hdfs://192.168.28.129/user/root/a2
 	

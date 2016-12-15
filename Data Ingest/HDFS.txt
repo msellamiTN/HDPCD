@@ -4,5 +4,5 @@
 2) To create a folder under /user directory :
     sudo -u hdfs hadoop fs -mkdir /user/root
     
-3) TO change the owner of the new directory to root :
+3) To change the owner of the new directory to root :
     sudo -u hdfs hadoop fs -chown root:hdfs /user/root

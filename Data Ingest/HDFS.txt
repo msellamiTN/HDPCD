@@ -78,3 +78,15 @@
 	 --hive-database sqoop_import \
 	 --compress \
 	 --compression-codec org.apache.hadoop.io.compress.SnappyCodec
+
+12) sqoop simple import :
+	
+	* Create target Directory : hadoop fs -mkdir /user/root/departments
+	* Change Owner : sudo -u hdfs hadoop fs -chown root:hdfs /user/root/departments
+	* Change Permissions : sudo -u hdfs hadoop fs -chmod 777 /user/root/departments
+	* sqoop import \	
+	  —-connect jdbc:mysql://sandbox.hortonworks.com:3306/retail_db \
+	  —-username retail_dba \
+	  —-password hadoop \
+	  —-table departments \
+	  —-target-dir /user/root/departments 

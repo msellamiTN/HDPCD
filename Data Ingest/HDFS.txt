@@ -64,4 +64,17 @@
 	  --password haddop \
 	  -m 1 \
 	  --warehouse-dir /user/sqoop/practice1/all_tables
-	
+
+11) sqoop import-all-tables into hive :
+	* Launch hive -> hive
+	* Create Database -> create database sqoop_import
+	* sqoop import-all-tables \
+	 --connect jdbc:mysql://sandbox.hortonworks.com:3306/retail_db \
+	 --username retail_dba \
+	 --password hadoop \
+	 --hive-import \
+	 --hive-overwrite \
+	 --create-hive-table \
+	 --hive-database sqoop_import \
+	 --compress \
+	 --compression-codec org.apache.hadoop.io.compress.SnappyCodec

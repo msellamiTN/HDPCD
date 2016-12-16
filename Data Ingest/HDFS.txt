@@ -28,7 +28,7 @@
 	* sudo -u hdfs hadoop fs -chown root:hdfs /user/sqoop
 	* sudo -u hdfs hadoop fs -chmod 777 /user/sqoop
 	* hadoop fs -mkdir /user/sqoop/practice1
-	* sudo -u hfs hadoop fs -chown root:hdfs /user/sqoop/practice1
+	* sudo -u hdfs hadoop fs -chown root:hdfs /user/sqoop/practice1
 	* sudo -u hdfs hadoop fs -chmod 777 /user/sqoop/practice1 
 	
 7) sqoop list-databases command :
@@ -48,8 +48,20 @@
 9) sqoop eval command :
 
 	sqoop eval \
-	—-connect “jdbc:mysql://192.168.28.129:3306/retail_db” \
+	—-connect “jdbc:mysql://sandbox.hortonworks.com:3306/retail_db” \
 	—-username retail_dba \
 	—-password hadoop \
 	—-query “SELECT * FROM departments”
+
+10) sqoop import all tables :
+	
+	* Create directory for storing all the tables -> hadoop fs -mkdir /user/sqoop/practice1/all_tables
+	* sudo -u hdfs hadoop fs -chown root:hdfs /user/sqoop/practice1/all_tables
+	* sudo -u hdfs hadoop fs -chmod 777 /user/sqoop/practice1/all_tables
+	* sqoop import-all-tables \
+	  --connect jdbc:mysql://sandbox.hortonworks.com:3306/retail_db \
+	  --username retail_dba \
+	  --password haddop \
+	  -m 1 \
+	  --warehouse-dir /user/sqoop/practice1/all_tables
 	

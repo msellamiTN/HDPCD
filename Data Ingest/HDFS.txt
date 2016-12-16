@@ -22,4 +22,34 @@
 	* To Verify use : hadoop fs -ls -R /user/root
 	* Use Patterns in mkdir : hadoop fs -mkdir /user/root/t{1,2} (t{1..10})
 	* Use Ip address : hadoop fs -mkdir hdfs://192.168.28.129/user/root/a1 hdfs://192.168.28.129/user/root/a2
+
+6) sqoop create directory for practice :
+	* hadoop fs -mkdir /user/sqoop
+	* sudo -u hdfs hadoop fs -chown root:hdfs /user/sqoop
+	* sudo -u hdfs hadoop fs -chmod 777 /user/sqoop
+	* hadoop fs -mkdir /user/sqoop/practice1
+	* sudo -u hfs hadoop fs -chown root:hdfs /user/sqoop/practice1
+	* sudo -u hdfs hadoop fs -chmod 777 /user/sqoop/practice1 
+	
+7) sqoop list-databases command :
+
+	sqoop list-databases \
+	—-connect “jdbc:mysql://192.168.28.129:3306” \
+	—-username retail_dba
+	—-password hadoop
+
+8) sqoop list-tables command :
+	
+	sqoop list-tables \
+	—-connect “jdbc:mysql://192.168.28.129:3306/retail_db” \
+	—-username retail_dba \
+	—-password hadoop
+
+9) sqoop eval command :
+
+	sqoop eval \
+	—-connect “jdbc:mysql://192.168.28.129:3306/retail_db” \
+	—-username retail_dba \
+	—-password hadoop \
+	—-query “SELECT * FROM departments”
 	

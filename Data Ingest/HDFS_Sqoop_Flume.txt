@@ -90,3 +90,52 @@
 	  —-password hadoop \
 	  —-table departments \
 	  —-target-dir /user/root/departments 
+
+13) sqoop boundary-query and Columns:
+	* To Remove a file : hadoop fs -rm -R /user/root/departments
+	* sqoop import \	
+	  —-connect jdbc:mysql://sandbox.hortonworks.com:3306/retail_db \
+	  —-username retail_dba \
+	  —-password hadoop \
+	  —-table departments \
+	  —-target-dir /user/root/departments \
+	  -m 2 \
+	  --boundary-query "select min(department_id), max(department_id) from departments where department_id <> 8000" \
+          --columns department_name
+
+14) sqoop split-by column_name when there is no primary key on a table :
+	
+	  sqoop import \	
+	  —-connect jdbc:mysql://sandbox.hortonworks.com:3306/retail_db \
+	  —-username retail_dba \
+	  —-password hadoop \
+	  —-table departments_nopk \
+	  —-target-dir /user/root/departments_nopk \
+	  —split-by department_id
+
+15) sqoop —query argument demo :
+
+sqoop import \	
+—-connect jdbc:mysql://sandbox.hortonworks.com:3306/retail_db \
+—-username retail_dba \
+—-password hadoop \
+—query “select * from orders join order_items on orders.order_id = order_items.order_item_order_id where \$CONDITIONS” \
+—-table departments_nopk \
+—-target-dir /user/root/orders_join \
+—split-by order_id
+
+
+16) sqoop where argument demo :
+
+sqoop import \	
+	  —-connect jdbc:mysql://sandbox.hortonworks.com:3306/retail_db \
+	  —-username retail_dba \
+	  —-password hadoop \
+	  —-table departments \
+	  —-target-dir /user/root/departments \
+          —append \
+	  -m 2 \
+	  —where "department_id > 8" \
+          --columns department_name
+	
+	

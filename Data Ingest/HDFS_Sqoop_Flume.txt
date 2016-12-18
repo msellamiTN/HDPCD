@@ -138,4 +138,30 @@ sqoop import \
 	  —where "department_id > 8" \
           --columns department_name
 	
+17) sqoop import into hive table already created :
 	
+* Create a database and table in hive for this demo:
+		-> create database sqoop_import_hive;
+		-> create table departments(department_id int, department_name string);
+* sqoop import \
+—-connect jdbc:mysql://sandbox.hortonworks.com:3306/retail_db \
+—-username retail_dba \
+—-password hadoop \
+—-table departments \
+—-hive-home /apps/hive/warehouse \  
+—-hive-import \
+—-hive-overwrite \
+—-hive-table sqoop_import_hive.departments  
+
+18) sqoop import into hive table and create the table while importing :
+
+sqoop import \
+—-connect jdbc:mysql://sandbox.hortonworks.com:3306/retail_db \
+—-username retail_dba \
+—-password hadoop \
+—-table categories \
+—-hive-home /apps/hive/warehouse \  
+—-hive-import \
+—-hive-overwrite \
+—-hive-table sqoop_import_hive.categories \
+—-create-hive—table 

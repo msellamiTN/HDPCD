@@ -165,3 +165,27 @@ sqoop import \
 —-hive-overwrite \
 —-hive-table sqoop_import_hive.categories \
 —-create-hive—table 
+
+
+19) sqoop import into hive incremental :
+
+sqoop import \
+--connect jdbc:mysql://sandbox.hortonworks.com:3306/retail_db \ 
+--username retail_dba \
+—-password hadoop \
+—-table departments \
+—-where "department_id < 6" \
+—-target-dir /user/root/incremental_load
+
+
+sqoop import \
+--connect jdbc:mysql://sandbox.hortonworks.com:3306/retail_db \ 
+--username retail_dba \
+—-password hadoop \
+—-table departments \
+—-target-dir /user/root/incremental_load \
+—-append \
+—-check-column “department_id” \
+—-incremental append \
+—-last-value 5
+

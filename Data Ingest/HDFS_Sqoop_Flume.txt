@@ -189,3 +189,37 @@ sqoop import \
 —-incremental append \
 —-last-value 5
 
+20) sqoop export simple example :
+
+create table order_items_export as select * from order_items where 1 = 2;
+
+sqoop export \
+--connect jdbc:mysql://sandbox.hortonworks.com:3306/retail_db \ 
+--username retail_dba \
+—-password hadoop \
+—-table order_items_export \
+—-export-dir /user/sqoop/practice1/all_tables/order_items \
+—-batch 
+
+21) sqoop export merge or update:
+
+vi dep_export.txt
+7, fanshop
+9000, testing export
+
+hadoop fs -mkdir /user/sqoop/export_test
+hadoop fs -put dep_export.txt /user/sqoop/export_test
+
+sqoop export \
+--connect jdbc:mysql://sandbox.hortonworks.com:3306/retail_db \ 
+--username retail_dba \
+—-password hadoop \
+—-table departments \
+—-export-dir /user/sqoop/export_test \
+—-batch
+—-update-key department_id \
+—-update-mode allowinsert
+
+If the target table does not have any primary/unique key the data will be just duplicated.
+
+22) 

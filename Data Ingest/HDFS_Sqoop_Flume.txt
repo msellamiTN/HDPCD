@@ -222,4 +222,54 @@ sqoop export \
 
 If the target table does not have any primary/unique key the data will be just duplicated.
 
-22) 
+22) sqoop import delimiter enclosed-by, fields-terminated-by lines-terminated-by -> plain hfs import
+
+sqoop import
+--connect jdbc:mysql://sandbox.hortonworks.com:3306/retail_db \ 
+--username retail_dba \
+—-password hadoop \
+—-table departments \
+—-target-dir /user/sqoop/partice1/departments_enclosed \
+—-enclosed-by \” \
+—-fields-terminated-by \| \
+—-lines-terminated-by \:
+
+23) null-string and null-non-string
+
+MySQL ->
+
+create table departments_null_nonnull(department_id int, department_name varchar(100));
+insert into departments_null_nonnull select * from departments;
+insert into departments_null_nonnull values(null, null);
+
+sqoop import
+--connect jdbc:mysql://sandbox.hortonworks.com:3306/retail_db \ 
+--username retail_dba \
+—-password hadoop \
+—-table departments_null_nonnull \
+—-hive-import \
+—-hive-home /apps/hive/warehouse \
+—-hive-table sqoop_import_hive.departments_null_nonnull \
+—-create-hive-table \
+-m -4 \
+—-null-string “NULL” \
+—-null-non-string -1 \
+—-split-by department_id
+
+24) sqoop export delimiters : 
+
+create table departments_null_nonnull_export 
+select * from departments_null_nonnull where 1 = 2;
+
+
+sqoop export \
+--connect jdbc:mysql://sandbox.hortonworks.com:3306/retail_db \ 
+--username retail_dba \
+—-password hadoop \
+—-table departments_null_nonnull_export \
+—-export-dir /apps/hive/warehouse/sqoop_import_hive.db/departments_null_nonnull \
+—-input-fields-terminated-by ‘\001’ \
+—-input-lines-terminated-by ‘\n’ \
+—-input-null-string lvl \
+—-input-non-null-string -1
+

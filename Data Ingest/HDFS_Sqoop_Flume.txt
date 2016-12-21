@@ -273,3 +273,42 @@ sqoop export \
 —-input-null-string lvl \
 —-input-non-null-string -1
 
+————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
+
+Sqoop File Format -> —-as-textfile is default
+
+25) —-as-sequencefile ->
+
+sqoop import \
+—-connect jdbc:mysql://sandbox.hortonworks.com:3306/retail_db \
+—-username retail_dba \
+—-password hadoop \
+—-table departments \
+—-as-sequencefile \
+—-target-dir /user/sqoop/practice1/departments_sequencefile
+
+26) —-as-avrodatafile ->
+sqoop import \
+—-connect jdbc:mysql://sandbox.hortonworks.com:3306/retail_db \
+—-username retail_dba \
+—-password hadoop \
+—-table departments \
+—-as-avrodatafile \
+—-target-dir /user/sqoop/practice1/dep_avro_data_file
+
+A file with the {table_name}.avsc extension will be created in the directory from where the sqoop import command was run.
+
+cat {table_name}.avsc
+
+To create a table in hive store this metadata in HDFS and provide the location of this metadata to the create table statement in hive
+
+hadoop fs -mkdir -p /user/sqoop/avro_metadata
+hadoop fs -put departments.avsc /user/sqoop/avro_metadata
+
+CREATE EXTERNAL TABLE departments_avro
+ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.avro.AvroSerDe'
+STORED AS INPUTFORMAT 'org.apache.hadoop.hive.ql.io.avro.AvroContainerInputFormat'
+OUTPUTFORMAT 'org.apache.hadoop.hive.ql.io.avro.AvroContainerInputFormat'
+LOCATION 'hdfs:///user/sqoop/practice1/dep_avro_data_file'
+TBLPROPERTIES ('avro.schema.url'='hdfs://sandbox.hortonworks.com/user/sqoop/avro_metadata/departments.avsc')
+

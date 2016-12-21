@@ -1,1 +1,25 @@
+Create a folder for storing imported files on hfs
+	hadoop fs -mkdir -p /user/hive_demos/data_import
+
+Put deckofcards.txt to the above location
+	hadoop fs -put /root/deckofcards.txt /user/hive_demos/data_import
+
+1)Create Database :
+
+CREATE DATABASE IF NOT EXISTS cards;
+
+USE cards;
+
+2) CREATE TABLE :
+
+CREATE TABLE deck_of_cards (
+COLOR string,
+SUIT string,
+PIP string)
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ‘|’
+STORED AS TEXTFILE;
+
+3) Load the Table with data :
+
+LOAD DATA LOCAL INPATH ‘/root/deckofcards.txt’ INTO TABLE deck_of_cards;
 

@@ -1,1 +1,9 @@
 
+Create hfs directory for PIG :
+
+hadoop fs -mkdir /user/pig_demo
+
+Create pig_word_count_demo.txt with some text. Transfer it to /user/pig_demo
+
+hadoop fs -put pig_word_count_demo.txt /user/pig_demo
+

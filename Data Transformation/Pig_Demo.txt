@@ -7,3 +7,17 @@ Create pig_word_count_demo.txt with some text. Transfer it to /user/pig_demo
 
 hadoop fs -put pig_word_count_demo.txt /user/pig_demo
 
+1) pig_demo.pig:
+
+load_data = load '/user/pig_demo/pig_word_count_demo.txt’;
+dump load_data;
+
+2) word_count.pig
+
+lines = LOAD '/user/pig_demo/pig_word_count_demo.txt’ using PigStorage() AS (line:chararray);
+words = FOREACH lines GENERATE FLATTEN(TOKENIZE(line)) AS word;
+grouped = GROUP words by word;
+wordCount = FOREACH grouped GENERATE group, COUNT(words);
+DUMP wordCount;
+
+

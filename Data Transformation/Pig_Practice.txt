@@ -1,1 +1,74 @@
+1) Create student.txt input file using :
+ vi student.txt
+John,18,4.0
+Mary,19,3.8
+Bill,20,3.9
+Joe,18,3.8
 
+2) Push it to hdfs :
+hadoop fs -put student.txt /user/pig_demo
+
+3)Create a relation with Schema:
+A = LOAD '/user/pig_demo/student.txt' USING PigStorage(',') AS (name:chararray, age:int, gpa:float); 
+
+4) To verify the schema :
+DESCRIBE A;
+
+5) To display result on the screen :
+DUMP A;
+
+6) TO define a Tuple in Schema :
+	*Create data4.txt input file using :
+		(3,8,9)
+		(1,4,7)
+		(2,5,8)
+	* Load it to hdfs using :
+	  hadoop fs -put data4.txt /user/pig_demo/data4.txt
+	*Define Relation using :
+	 A = LOAD ‘/user/pig_demo/data4.txt’ AS (T: tuple(f1:int, f2:int, f3:int));
+	 DESCRIBE A;
+	 DUMP A;
+
+7) To define a Bag in Schema :
+
+* Create data_bag.txt input file using:
+	{(3,8,9)}
+	{(1,4,7)}
+	{(2,5,8)}
+* Load it to hdfs using :
+  hadoop fs -put data_bag.txt /user/pig_demo
+
+* Define a Relation using :
+
+  B = LOAD ‘/user/pig_demo/data_bag.txt’ AS (B: bag{T: tuple(f1:int,f2:int,f3:int)});
+  DESCRIBE B;
+  DUMP B;
+
+8) To define a Map in Schema :
+* Create data_map input file using:
+  vi data_map.txt
+	[name#bob]
+	[age#55]
+* Load it into hdfs using :
+  hadoop fs -put data_map.txt /user/pig_demo
+
+* Define a Relation using :
+  
+  C = LOAD ‘/user/pig_demo/data_map.txt’ AS (M: map []);
+  DESCRIBE C;
+  DUMP C;
+
+9) Addition:
+
+* Create data_add_operation.txt using:
+vi data_add_operation.txt
+10,1,{(2,3),(4,6)}
+10,3,{(2,3),(4,6)}
+10,6,{(2,3),(4,6),(5,7)}
+
+* Load it into hdfs using :
+hadoop fs -put data_add_operation.txt /user/pig_demo
+
+* Define a Relation using :
+
+  A = LOAD ‘/user/pig_demo/data_add_operation.txt’ AS (f1:int, f2:int, B:bag{T:tuple(t1:int,t2:int)});

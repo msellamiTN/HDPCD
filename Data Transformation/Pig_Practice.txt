@@ -58,7 +58,9 @@ DUMP A;
   DESCRIBE C;
   DUMP C;
 
-9) Addition:
+9) Operators Demo :
+
+Modulo:
 
 * Create data_add_operation.txt using:
 vi data_add_operation.txt
@@ -72,3 +74,121 @@ hadoop fs -put data_add_operation.txt /user/pig_demo
 * Define a Relation using :
 
   A = LOAD ‘/user/pig_demo/data_add_operation.txt’ AS (f1:int, f2:int, B:bag{T:tuple(t1:int,t2:int)});
+  X = FOREACH A GENERATE f1,f2, f1%f2;
+  DUMP X;
+
+* BINCOUNT Example :
+  X = FOREACH A GENERATE f2, (f2==1?1:COUNT(B));
+  DUMP X;
+
+* Boolean Operation:
+  vi data_boolean_operation.txt
+  1       2       3
+  4       2       1
+  8       3       4
+  4       3       3
+  7       2       5
+  8       4       3
+  hadoop fs -put data_boolean_operation.txt
+  A = LOAD '/user/pig_demo/data_boolean_operation.txt' AS (f1:int,f2:int,f3:int);
+  X = FILTER A BY (f1==8) OR (NOT (f2+f3>f1));
+
+10) Casting Demo :
+hadoop fs -put data_boolean_operation.txt /user/pig_demo/data_cast.txt
+A = LOAD '/user/pig_demo/data_cast.txt' AS (f1:int,f2:int,f3:int);
+B = GROUP A BY f1;
+X = FOREACH B GENERATE group, (chararray)COUNT(A) AS Total;
+DESCRIBE X;
+X: {group: int,Total: chararray} -> Int casted to chararray
+
+11) ByteArray Casting Demo :
+vi data_bytearray_cast.txt
+(1,2,3)
+(4,2,1)
+(8,3,4)
+hadoop fs -put data_bytearray_cast.txt /user/pig_demo
+A = LOAD '/user/pig_demo/data_bytearray_cast.txt' AS fld:bytearray;
+DUMP A;
+DESCRIBE A; -> A: {fld: bytearray}
+X = FOREACH A GENERATE (tuple(int,int,float))fld;
+DESCRIBE X; -> X: {fld: (int,int,float)}
+
+12) Comparison Operators :
+
+vi data_comparision.txt
+11      apache
+12      hadoop
+13      google
+14      bigdata
+15      java
+16      hdfs
+17      pig
+18      hive
+19      mapreduce
+
+hadoop fs -put data_comparision.txt /user/pig_demo
+
+
+A = LOAD '/user/pig_demo/data_comparision.txt' AS (f1:int,f2:chararray);
+
+X = FILTER A BY (f1 == 18);
+DUMP X; -> (18,hive)
+
+X = FILTER A BY (f2 == 'hadoop');
+DUMP X; -> (12,hadoop)
+
+X = FILTER A BY (f2 matches 'hdfs');
+DUMP X; -> (16,hdfs)
+
+13) Relational Operators :
+
+* Cross :->
+  vi data_relation_one.txt
+  1       2       3
+  4       2       1  
+
+  vi data_relation_two.txt
+  2       4
+  8       9
+  1       3
+
+  hadoop fs -put data_relation_one.txt data_relation_two.txt /user/pig_demo
+
+  A = LOAD '/user/pig_demo/data_relation_one.txt' AS (a1:int,a2:int,a3:int);
+  B = LOAD ‘/user/pig_demo/data_relation_two.txt’ AS (a1:int,a2:int);
+  X = CROSS A,B;
+
+* Distinct :->
+  vi data_distinct.txt
+  8       3       4
+  1       2       3
+  4       3       3
+  4       3       3
+  1       2       3
+
+  hadoop fs -put data_distict.txt /user/pig_demo
+  A = LOAD '/user/pig_demo/data_distinct.txt' AS (a1:int,a2:int,a3:int);
+  X = DISTINCT A;
+
+* Filter :->
+  
+  vi data_filter.txt
+  1       2       3
+  4       2       1
+  8       4       3
+  4       3       3
+  7       2       5
+
+  hadoop fs -put data_filter.txt /user/pig_demo
+
+  A = LOAD '/user/pig_demo/data_filter.txt' AS (a1:int,a2:int,a3:int);
+  X = FILTER A BY a3 == 3;
+
+* FOREACH :->
+
+  vi data_foreach.txt
+  1       2       3
+  4       2       1
+  8       4       3
+  4       3       3
+  7       2       5

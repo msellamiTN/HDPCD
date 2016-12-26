@@ -192,3 +192,20 @@ DUMP X; -> (16,hdfs)
   8       4       3
   4       3       3
   7       2       5
+  A = LOAD '/user/pig_demo/data_foreach.txt' AS (a1:int,a2:int,a3:int);
+  X = FOREACH A GENERATE a1;
+  DUMP X;
+
+* Group :->
+
+  vi data_group.txt ( Tab Delimited)
+  John	18 	4.0
+  Mary	19	3.8
+  Bill	20 	3.9
+  Joe	18	3.8
+  A = LOAD '/user/pig_demo/data_group.txt' AS (name:chararray, age:int,gpa:float);
+  DUMP A;
+  B = GROUP A BY age;
+  (18,{(Joe,18,3.8),(John,18,4.0)})
+  (19,{(Mary,19,3.8)})
+  (20,{(Bill,20,3.9)})

@@ -209,3 +209,102 @@ DUMP X; -> (16,hdfs)
   (18,{(Joe,18,3.8),(John,18,4.0)})
   (19,{(Mary,19,3.8)})
   (20,{(Bill,20,3.9)})
+
+* Join (inner):
+  vi data_join_inner_one.txt
+  1       2       3
+  4       2       1
+  8       3       4
+  4       3       3
+  7       2       5
+  8       4       3
+
+  vi data_join_inner_two.txt
+  2       4
+  8       9
+  1       3
+  2       7
+  2       9
+  4       6
+  4       9
+ 
+  A = LOAD '/user/pig_demo/data_join_inner_one.txt' AS (a1:int,a2:int,a3:int);
+  B = LOAD '/user/pig_demo/data_join_inner_two.txt' AS (b1:int,b2:int);
+  X = JOIN A BY a1, B BY b1;
+  DUMP X;
+
+* Join (outer):
+  vi data_join_outer_one.txt
+  alice   101
+  bob     102
+  hary    103
+  molly   104
+  mark    105
+  natsy   106
+  mikasa  107
+  pikachu 108
+  doremon 109
+  raichu  110
+
+  vi data_join_inner_two.txt
+  alice   Hadoop
+  bob     hdfs    
+  harry   sqoop
+  molly   hive
+  mark    pig
+  viraku  spark
+  samuel  spork
+  sunny   llama
+  winskey kafka
+
+  A = LOAD '/user/pig_demo/data_join_outer_one.txt' AS (name:chararray, id:int);
+  B = LOAD '/user/pig_demo/data_join_outer_two.txt' AS (name:chararray, tools:chararray);
+
+  LEFT OUTER JOIN :->
+  C = JOIN A BY $0 LEFT OUTER, B BY $0;
+  DUMP C;
+  (bob,102,bob,hdfs)
+  (hary,103,,)
+  (mark,105,mark,pig)
+  (alice,101,alice,Hadoop)
+  (molly,104,molly,hive)
+  (natsy,106,,)
+  (mikasa,107,,)
+  (raichu,110,,)
+  (doremon,109,,)
+  (pikachu,108,,)
+
+  RIGHT OUTER JOIN :->
+  C = JOIN A BY $0 RIGHT OUTER, B BY $0;
+  (bob,102,bob,hdfs)
+  (mark,105,mark,pig)
+  (alice,101,alice,Hadoop)
+  (,,harry,sqoop)
+  (molly,104,molly,hive)
+  (,,sunny,llama)
+  (,,samuel,spork)
+  (,,viraku,spark)
+  (,,winskey,kafka)
+
+  FULL OUTER JOIN :->
+  C = JOIN A BY $0 FULL, B BY $0;
+  DUMP C;
+  (bob,102,bob,hdfs)
+  (hary,103,,)
+  (mark,105,mark,pig)
+  (alice,101,alice,Hadoop)
+  (,,harry,sqoop)
+  (molly,104,molly,hive)
+  (natsy,106,,)
+  (,,sunny,llama)
+  (mikasa,107,,)
+  (raichu,110,,)
+  (,,samuel,spork)
+  (,,viraku,spark)
+  (doremon,109,,)
+  (pikachu,108,,)
+  (,,winskey,kafka)
+
+* LIMIT :
+  A = LOAD '/user/pig_demo/data_join_inner_one.txt' AS (a1:int,a2:int,a3:int);
+  LIMIT A 3;

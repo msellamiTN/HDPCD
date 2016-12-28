@@ -308,3 +308,57 @@ DUMP X; -> (16,hdfs)
 * LIMIT :
   A = LOAD '/user/pig_demo/data_join_inner_one.txt' AS (a1:int,a2:int,a3:int);
   LIMIT A 3;
+
+* Order By :
+  A = LOAD '/user/pig_demo/data_orderby.txt' AS (a1:int,a2:int,a3:int);
+  X = ORDER A BY a3 DESC;
+
+* Rank :
+  vi data_rank.txt
+  David   1       N
+  Tete    2       N
+  Ranjit  3       M
+  Ranjit  3       P
+  David   4       Q
+  David   4       Q
+  Jillian 5       Q
+  
+  hadoop fs -put data_rank.txt /user/pig_demo
+  A = LOAD '/user/pig_demo/data_rank.txt' as (f1:chararray,f2:int,f3:chararray);
+  DUMP A;
+  B = RANK A;
+
+* SPLIT :
+  vi data_split.txt
+  1       2       3
+  4       5       6
+  7       8       9
+
+  SPLIT A INTO X IF f1 < 7, Y IF f2 == 5, Z IF (f3 < 6 OR f3 > 6);
+  DUMP X;
+  DUMP Y;
+  DUMP Z;
+
+* Store :
+  A = LOAD '/user/pig_demo/data_orderby.txt' AS (a1:int,a2:int,a3:int);
+  STORE A INTO ’/user/pig_demo/MyStoreOutput’ USING PigStorage(‘*’);
+  cat /user/pig_demo/MyStoreOutput;
+  1*2*3
+  4*2*1
+  8*3*4
+  4*3*3
+  7*2*5
+  8*4*3
+
+* Union :
+  vi data_union_1.txt
+  1       2       3
+  4       2       1
+  vi data_union_2.txt
+  2       4
+  8       9
+  1       3
+  A = LOAD '/user/pig_demo/data_union_one.txt' AS (a1:int,a2:int,a3:int);
+  B = LOAD '/user/pig_demo/data_union_two.txt' AS (b1:int,b2:int);
+  X = UNION A,B;
+

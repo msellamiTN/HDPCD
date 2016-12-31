@@ -20,4 +20,22 @@ grouped = GROUP words by word;
 wordCount = FOREACH grouped GENERATE group, COUNT(words);
 DUMP wordCount;
 
+3) Load data without a schema :->
+  
+   A = LOAD ‘/user/sqoop/all_tables/departments’ USING PigStorage(‘,’);
+
+4) Load data with a schema :->
+  
+   A = LOAD ‘/user/sqoop/all_tables/departments’ USING PigStorage(‘,’) AS (department_id:int, department_name:chararray);
+
+5) Load data from Hive :->
+   
+   Important Launch pig with Parameter  -useHcatalog :-> pig -useHCatalog
+   customerDetails = LOAD 'xademo.customer_details' USING org.apache.hive.hcatalog.pig.HCatLoader();
+   DUMP customerDetails;
+
+6) Transform to match Hive schema :
+   
+   
+
 

@@ -34,7 +34,27 @@ DUMP wordCount;
    customerDetails = LOAD 'xademo.customer_details' USING org.apache.hive.hcatalog.pig.HCatLoader();
    DUMP customerDetails;
 
-6) Transform to match Hive schema :
+6) Transform to match Hive schema :->
+   
+   First get the hfs location of a table using :
+   DESCRIBE FORMATTED customer_details; -> Also get the delimiter by verifying field.delim Parameter
+   Location:           	hdfs://sandbox.hortonworks.com:8020/apps/hive/warehouse/xademo.db/customer_details
+   field.delim         	|
+ 
+   customer_details = LOAD 'hdfs://sandbox.hortonworks.com:8020/apps/hive/warehouse/xademo.db/customer_details' USING PigStorage('|') AS (phone_number:chararray,plan:chararray,rec_date:chararray,status:chararray,balance:chararray,imei:chararray,region:chararray);
+   
+
+7) Grouping :->
+   
+   customer_details_hive = LOAD 'xademo.customer_details' USING org.apache.hive.hcatalog.pig.HCatLoader();
+   customer_details_hive_noheader = FILTER customer_details_hive BY phone_number != 'PHONE_NUM';
+   customer_details_group_all = GROUP customer_details_hive_noheader ALL;
+   customer_details_count = FOREACH customer_details_group_all GENERATE COUNT_STAR(customer_details_hive_noheader) AS cnt;
+
+   —To Filter out columns with NULLs
+   customer_details_hive_no_null = FILTER customer_details_hive_noheader BY imei != ‘’;
+   customer_details_hive_no_null_grouped = GROUP customer_details_hive_no_null ALL;
+   customer_details_hive_no_null_count = FOREACH customer_details_hive_no_null_grouped GENERATE COUNT_STAR(customer_details_hive_no_null) AS cnt;
    
    
 

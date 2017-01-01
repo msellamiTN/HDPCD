@@ -312,3 +312,13 @@ OUTPUTFORMAT 'org.apache.hadoop.hive.ql.io.avro.AvroContainerInputFormat'
 LOCATION 'hdfs:///user/sqoop/practice1/dep_avro_data_file'
 TBLPROPERTIES ('avro.schema.url'='hdfs://sandbox.hortonworks.com/user/sqoop/avro_metadata/departments.avsc')
 
+--Create Hive Table by including --driver argument :
+sqoop import \
+--connect jdbc:mysql://localhost:3306/retail_db \
+--username retail_dba \
+--password hadoop \
+--table orders \
+--hive-import \
+--create-hive-table \
+--hive-table pig_demo.orders \
+--driver com.mysql.jdbc.Driver

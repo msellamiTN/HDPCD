@@ -56,6 +56,31 @@ DUMP wordCount;
    customer_details_hive_no_null_grouped = GROUP customer_details_hive_no_null ALL;
    customer_details_hive_no_null_count = FOREACH customer_details_hive_no_null_grouped GENERATE COUNT_STAR(customer_details_hive_no_null) AS cnt;
    
+8) Grouping By Key :->
    
+   orders = LOAD 'pig_demo.orders' USING org.apache.hive.hcatalog.pig.HCatLoader();
+   group_by_status = GROUP orders BY order_status;
+   count_by_order_status = FOREACH group_by_status GENERATE group, COUNT(orders) AS cnt;
 
+9) Remove records with NULL Values :->
+   
+   a) Load Data Without Schema :->
+      customer_details_without_schema = LOAD ‘/apps/hive/warehouse/xademo.db/customer_details’ USING PigStorage(‘|’);
+      customer_details_no_null = FILTER customer_details_without_schema BY ($5 IS NOT NULL);
+   
+   b) Load Data With Schema :->
+      customer_details_with_schema = LOAD 'hdfs://sandbox.hortonworks.com:8020/apps/hive/warehouse/xademo.db/customer_details' USING PigStorage('|') AS (phone_number:chararray,plan:chararray,rec_date:chararray,status:chararray,balance:chararray,imei:chararray,region:chararray);
+
+   c) Load Data From Hive :->
+      customer_details_hive = LOAD 'xademo.customer_details' USING org.apache.hive.hcatalog.pig.HCatLoader();
+
+10) Store Data From Pig Relation to HDFS Folder :->
+    
+    STORE departments INTO '/user/pig_demo/store_folder/departments_one'; 
+    departments = LOAD '/user/sqoop/all_tables/departments' USING PigStorage(',') AS (department_id:int, department_name:chararray);
+    STORE departments INTO '/user/pig_demo/store_folder/departments_two' USING PigStorage('|');
+    STORE departments INTO '/user/pig_demo/store_folder/departments_three’ USING BinStorage('|');
+    STORE departments INTO '/user/pig_demo/store_folder/departments_four’ USING JsonStorage();
+
+   
 

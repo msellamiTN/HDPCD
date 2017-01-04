@@ -98,3 +98,25 @@ DUMP wordCount;
     order_status = FOREACH orders GENERATE $3;
     order_status_distinct = DISTINCT order_status;
 
+14) Set Number of Reducers :->
+ 
+    SET DEFAULT_PARALLEL 2; -> AT Script Level
+    orders = LOAD 'pig_demo.orders' USING org.apache.hive.hcatalog.pig.HCatLoader();
+    group_by_status = GROUP orders BY order_status PARALLEL 2;
+    count_by_order_status = FOREACH group_by_status GENERATE group, COUNT(orders) AS cnt;
+
+15) Join 1 :->
+
+    orders = LOAD 'pig_demo.orders' USING org.apache.hive.hcatalog.pig.HCatLoader();
+    order_items = LOAD 'pig_demo.order_items' USING org.apache.hive.hcatalog.pig.HCatLoader();
+    orders_limit = LIMIT orders 10;
+    orders_join = JOIN orders BY order_id, order_items BY order_item_order_id;
+
+    To Get Count of Order_items :->
+    order_items_group_all = GROUP order_items ALL;
+    order_items_count = FOREACH order_items_group_all GENERATE COUNT_STAR(order_items) AS CNT;
+
+    Transformation :->
+    order_by_date = FOREACH orders_join GENERATE orders::order_date, order_items::order_item_subtotal;
+    order_revenue_by_date = GROUP order_by_date BY orders::order_date;
+    order_revenue = FOREACH order_revenue_by_date GENERATE group, SUM(order_by_date.order_items::order_item_subtotal) As RevenuePerDay;

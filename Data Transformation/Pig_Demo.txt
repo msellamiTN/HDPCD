@@ -82,5 +82,19 @@ DUMP wordCount;
     STORE departments INTO '/user/pig_demo/store_folder/departments_three’ USING BinStorage('|');
     STORE departments INTO '/user/pig_demo/store_folder/departments_four’ USING JsonStorage();
 
-   
+11) Store Data From Pig to Hive :->
+    
+    departments = LOAD '/user/sqoop/all_tables/departments' USING PigStorage(',') AS (department_id:int, department_name:chararray);
+    STORE departments INTO 'pig_hive.departments' USING org.apache.hive.hcatalog.pig.HCatStorer();
+
+12) Sort Pig Relation :->
+
+    categories = LOAD '/user/sqoop/all_tables/categories' USING PigStorage(',');
+    categories_orderby_dept_id = ORDER categories BY $1;
+
+13) Remove Duplicates using Distinct :->
+
+    orders = LOAD '/user/sqoop/all_tables/orders' USING PigStorage(',');
+    order_status = FOREACH orders GENERATE $3;
+    order_status_distinct = DISTINCT order_status;
 

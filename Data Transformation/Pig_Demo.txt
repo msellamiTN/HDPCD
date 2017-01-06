@@ -120,3 +120,50 @@ DUMP wordCount;
     order_by_date = FOREACH orders_join GENERATE orders::order_date, order_items::order_item_subtotal;
     order_revenue_by_date = GROUP order_by_date BY orders::order_date;
     order_revenue = FOREACH order_revenue_by_date GENERATE group, SUM(order_by_date.order_items::order_item_subtotal) As RevenuePerDay;
+
+16) Outer Join :->
+    
+    orders = LOAD 'pig_demo.orders' USING org.apache.hive.hcatalog.pig.HCatLoader();
+    order_items = LOAD 'pig_demo.order_items' USING org.apache.hive.hcatalog.pig.HCatLoader();
+    order_left_join = JOIN orders BY order_id LEFT OUTER, order_items BY order_item_order_id;
+    order_left_join_filtered = FILTER order_left_join BY order_items::order_item_order_id IS NULL;
+
+    order_left_grouped = GROUP order_left_join_filtered ALL;
+    order_left_count = FOREACH order_left_grouped GENERATE group, COUNT_STAR(order_left_join_filtered) AS CNT;
+
+17) Replicated Join :->
+
+
+
+18) Run Pig Script in Tez :
+    
+    pig_run_tez.pig
+    orders = LOAD 'pig_demo.orders' USING org.apache.hive.hcatalog.pig.HCatLoader();
+    orders_grouped = GROUP orders ALL;
+    orders_count = FOREACH orders_grouped GENERATE group, COUNT_STAR(orders) AS CNT;
+    DUMP orders_count;
+
+    To run in tez :->
+    pig -f pig_run_tez.pig -useHCatalog -x tez
+
+    To run in map reduce :->
+    pig -f pig_run_tez.pig -useHCatalog -x map reduce
+
+    To view wether Tez or MapReduce is default then :->
+    Navigate to /etc/pig/conf
+    vi pig.properties
+    look for exectype 
+
+19) Use UDF’s :->
+
+    find / -name "*piggybank*.jar"
+    /usr/hdp/2.5.0.0-1245/pig/piggybank.jar
+    /usr/hdp/2.5.0.0-1245/pig/lib/piggybank.jar 
+    REGISTER /usr/hdp/2.5.0.0-1245/pig/piggybank.jar;
+    departments = LOAD 'pig_demo.departments' USING org.apache.hive.hcatalog.pig.HCatLoader();
+    departments_upper = FOREACH departments GENERATE department_id, org.apache.pig.piggybank.evaluation.string.UPPER(department_name) AS Department_Name;
+
+    TO Define Alias :->
+    DEFINE Upper org.apache.pig.piggybank.evaluation.string.UPPER
+    departments_upper = FOREACH departments GENERATE department_id, Upper(department_name) AS Department_Name;
+    pig -f pig_UDF.pig -useHCatalog -x tez;

@@ -4,13 +4,13 @@ Create a folder for storing imported files on hdfs
 Put deckofcards.txt to the above location
 	hadoop fs -put /root/deckofcards.txt /user/hive_demos/data_import
 
-1)Create Database :
+1)Create Database :->
 
 CREATE DATABASE IF NOT EXISTS cards;
 
 USE cards;
 
-2) CREATE TABLE :
+2) CREATE TABLE :->
 
 CREATE TABLE deck_of_cards (
 COLOR string,
@@ -19,7 +19,7 @@ PIP string)
 ROW FORMAT DELIMITED FIELDS TERMINATED BY ‘|’
 STORED AS TEXTFILE;
 
-3) Load the Table with data :
+3) Load the Table with data :->
 
 LOAD DATA LOCAL INPATH ‘/root/deckofcards.txt’ INTO TABLE deck_of_cards;
 
@@ -28,3 +28,53 @@ LOAD DATA LOCAL INPATH ‘/root/deckofcards.txt’ INTO TABLE deck_of_cards;
    set mapreduce.job.reduces; //DISPLAY
    set mapreduce.job.reduces=2; //SET
 
+5) Important Commands :->
+   show databases;
+   use {database_name};
+   show tables;
+   describe {table_name};
+   describe formatted {table_name};
+
+6) Simple Queries :->
+
+   select * from departments;
+   select count(*) from orders;
+   select * from orders limit 10;
+
+7) Use all Clauses :->
+   SELECT order_status, count(1) FROM orders WHERE order_date = ‘2013-12-14 00:00:00.0’
+   GROUP BY order_status ORDER BY order_status;
+
+   —-Get number of complete orders for each date before ‘2013-12-14 00:00:00.0’
+   SELECT order_date, COUNT(1) FROM orders
+   WHERE order_date <= ‘2013-12-14 00:00:00.0’ AND order_status = ’COMPLETE’
+   GROUP BY order_date
+   ORDER BY order_date;
+
+   —-Get number of pending orders for each date for the month 0f 2013 December
+   SELECT order_date, COUNT(1) FROM orders
+   WHERE order_date LIKE ‘2013-12%’ 
+   AND order_status IN (’PENDING’,’PENDING_PAYMENT’,’PAYMENT_REVIEW’,’ON_HOLD’)
+   GROUP BY order_date
+   ORDER BY order_date;
+
+8) Create Managed Table :->
+   
+   —-Create hdfs directory from sqoop commabd
+   sqoop import-all-tables \
+   --connect jdbc:mysql://localhost:3306/retail_db \
+   —-username retail_dba
+   --password hadoop \
+   --warehouse-dir=/apps/hive/warehouse/retail_stage.db
+   —-driver com.mysql.jdbc.Driver
+ 
+   —-Create a hive database on top of the hdfs directory 
+   create database retail_stage;
+
+   —-Create table
+   CREATE TABLE orders_demo (
+   order_id INT,
+   order_date DATE,order_customer_id INT,
+   order_status VARCHAR(30))
+   ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+   STORED AS TEXTFILE;

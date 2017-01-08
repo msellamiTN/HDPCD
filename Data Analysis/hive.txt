@@ -1,4 +1,4 @@
-Create a folder for storing imported files on hfs
+Create a folder for storing imported files on hdfs
 	hadoop fs -mkdir -p /user/hive_demos/data_import
 
 Put deckofcards.txt to the above location
@@ -22,4 +22,9 @@ STORED AS TEXTFILE;
 3) Load the Table with data :
 
 LOAD DATA LOCAL INPATH ‘/root/deckofcards.txt’ INTO TABLE deck_of_cards;
+
+4) Display/Set Hive Params :->
+   
+   set mapreduce.job.reduces; //DISPLAY
+   set mapreduce.job.reduces=2; //SET
 

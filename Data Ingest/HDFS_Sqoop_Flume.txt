@@ -322,3 +322,12 @@ sqoop import \
 --create-hive-table \
 --hive-table pig_demo.orders \
 --driver com.mysql.jdbc.Driver
+
+Resolution for Sqoop with Avro
+sqoop import-all-tables -Dmapreduce.job.user.classpath.first=true \
+-m 12
+--connect jdbc:mysql://localhost:3306/retail_db \
+--username retail_dba \
+--password hadoop \
+--as-avrodatafile \
+--warehouse-dir /apps/hive/warehouse/retail_stage.db

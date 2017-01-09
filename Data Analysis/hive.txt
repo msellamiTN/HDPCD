@@ -78,3 +78,17 @@ LOAD DATA LOCAL INPATH ‘/root/deckofcards.txt’ INTO TABLE deck_of_cards;
    order_status VARCHAR(30))
    ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
    STORED AS TEXTFILE;
+
+Copy file from HDFS to HDFS :->
+hadoop distcp /user/hive_demo/deckofcards.txt /user/hive_Demo/cards/deckofcards.txt
+
+9) Create External Table :->
+   
+   CREATE DATABASE cards;
+   CREATE EXTERNAL TABLE deck_of_cards_external (
+   color string,
+   suit string,
+   pip string)
+   ROW FORMAT DELIMITED FIELDS TERMINATED BY ‘|’
+   STORED AS TEXTFILE
+   LOCATION ‘/user/hive_demo/cards’;

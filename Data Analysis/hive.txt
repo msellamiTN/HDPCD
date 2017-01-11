@@ -92,3 +92,44 @@ hadoop distcp /user/hive_demo/deckofcards.txt /user/hive_Demo/cards/deckofcards.
    ROW FORMAT DELIMITED FIELDS TERMINATED BY ‘|’
    STORED AS TEXTFILE
    LOCATION ‘/user/hive_demo/cards’;
+
+10) Prepare Data :->
+    AFTER Sqoop Import as Avrao files move all .avsc files to HDFS location
+    hadoop fs -put *.avsc /user/Avro_Files
+    
+    CREATE EXTERNAL TABLES :->
+    CREATE EXTERNAL TABLE categories
+    ROW FORMAT SERDE ‘org.apache.hadoop.hive.serde2.avro.AvroSerDe’
+    STORED AS AVRO
+    LOCATION ‘hdfs:///apps/hive/warehouse/retail_stage.db/categories’
+    TBLPROPERTIES (‘avrò.schema.url’=‘hdfs://sandbox.hortonworks.com/user/Avro_Files/categories.avsc’
+
+    CREATE EXTERNAL TABLE customers
+    ROW FORMAT SERDE ‘org.apache.hadoop.hive.serde2.avro.AvroSerDe’
+    STORED AS AVRO
+    LOCATION ‘hdfs:///apps/hive/warehouse/retail_stage.db/customers’
+    TBLPROPERTIES (‘avrò.schema.url’=‘hdfs://sandbox.hortonworks.com/user/Avro_Files/customers.avsc’
+
+    CREATE EXTERNAL TABLE departments
+    ROW FORMAT SERDE ‘org.apache.hadoop.hive.serde2.avro.AvroSerDe’
+    STORED AS AVRO
+    LOCATION ‘hdfs:///apps/hive/warehouse/retail_stage.db/departments’
+    TBLPROPERTIES (‘avrò.schema.url’=‘hdfs://sandbox.hortonworks.com/user/Avro_Files/departments.avsc’
+
+    CREATE EXTERNAL TABLE order_items
+    ROW FORMAT SERDE ‘org.apache.hadoop.hive.serde2.avro.AvroSerDe’
+    STORED AS AVRO
+    LOCATION ‘hdfs:///apps/hive/warehouse/retail_stage.db/order_items’
+    TBLPROPERTIES (‘avrò.schema.url’=‘hdfs://sandbox.hortonworks.com/user/Avro_Files/corder_items.avsc’
+
+    CREATE EXTERNAL TABLE orders
+    ROW FORMAT SERDE ‘org.apache.hadoop.hive.serde2.avro.AvroSerDe’
+    STORED AS AVRO
+    LOCATION ‘hdfs:///apps/hive/warehouse/retail_stage.db/orders’
+    TBLPROPERTIES (‘avrò.schema.url’=‘hdfs://sandbox.hortonworks.com/user/Avro_Files/orders.avsc’
+
+    CREATE EXTERNAL TABLE products
+    ROW FORMAT SERDE ‘org.apache.hadoop.hive.serde2.avro.AvroSerDe’
+    STORED AS AVRO
+    LOCATION ‘hdfs:///apps/hive/warehouse/retail_stage.db/products’
+    TBLPROPERTIES (‘avrò.schema.url’=‘hdfs://sandbox.hortonworks.com/user/Avro_Files/products.avsc’

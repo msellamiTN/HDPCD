@@ -331,3 +331,4 @@ sqoop import-all-tables -Dmapreduce.job.user.classpath.first=true \
 --password hadoop \
 --as-avrodatafile \
 --warehouse-dir /apps/hive/warehouse/retail_stage.db
+—-driver com.mysql.jdbc.Driver

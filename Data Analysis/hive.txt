@@ -133,3 +133,7 @@ hadoop distcp /user/hive_demo/deckofcards.txt /user/hive_Demo/cards/deckofcards.
     STORED AS AVRO
     LOCATION ‘hdfs:///apps/hive/warehouse/retail_stage.db/products’
     TBLPROPERTIES (‘avrò.schema.url’=‘hdfs://sandbox.hortonworks.com/user/Avro_Files/products.avsc’
+
+
+   
+    

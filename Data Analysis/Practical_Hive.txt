@@ -1,0 +1,16 @@
+Create a folder for storing imported files on hdfs
+	hadoop fs -mkdir -p /user/practical_hive/
+
+
+1)Create Database :->
+
+CREATE DATABASE IF NOT EXISTS shopping;
+
+USE cards;
+
+2) CREATE TABLE :->
+
+
+
+   
+    

@@ -4,11 +4,101 @@ Create a folder for storing imported files on hdfs
 
 1)Create Database :->
 
-CREATE DATABASE IF NOT EXISTS shopping;
+CREATE DATABASE IF NOT EXISTS practical_hive;
 
 USE cards;
 
 2) CREATE TABLE :->
+CREATE EXTERNAL TABLE practical_hive.customers (fname STRING,lname STRING,address STRUCT <HOUSENO:STRING, STREET:STRING, CITY:STRING, ZIPCODE:INT,STATE:STRING, COUNTRY:STRING>,active BOOLEAN,created DATE)COMMENT "customer master record table"LOCATION '/user/practical_hive/customers/';
+
+states.txt
+californiaohionorth dakotanew yorkcoloradonew jersey
+
+hadoop fs -put states.txt /user/practical_hive/states
+
+morestates.txt
+new mexicohawaiioregonsouth dakota
+
+hadoop fs -put morestates.txt /user/practical_hive/states
+
+CREATE TABLE states_internal(state string) LOCATION '/user/practical_hive/states';
+CREATE EXTERNAL TABLE states_external(state string) LOCATION '/user/practical_hive/states';
+
+3) TBLPROPERTIES :->
+
+states3.txt
+STATE_NAME----------californiaohionorth dakotanew yorkcoloradonew jersey
+
+hadoop fs -mkdir -p /user/practical_hive/states3/
+hadoop fs -put states3.txt /user/practical_hive/states3/
+
+CREATE EXTERNAL TABLE states3(state string) LOCATION '/user/practical_hive/states3’;
+
+3) Partitioning : ->
+CREATE EXTERNAL TABLE practical_hive.transactions (transdate DATE,transid INT,custid INT,fname STRING,lname STRING,item STRING,qty INT,price FLOAT)PARTITIONED BY (store STRING);
+
+INSERT INTO practical_hive.transactions PARTITION (store="new york") values ("01/25/2016",101,"A109","MATTHEW","SMITH","SHOES",1,112.9);
+
+4) Alter Table - Add Partition:
+
+hadoop fs -mkdir /user/practical_hive/ids
+hadoop fs -mkdir /user/practical_hive/ids/2016-05-31
+hadoop fs -mkdir /user/practical_hive/ids/2016-05-30
+
+vi 2016-05-31.txt
+11
+12
+13
+14
+15
+16
+hadoop fs -put 2016-05-31.txt /user/practical_hive/ids/2016-05-31
+vi 2016-05-30.txt
+1
+2
+3
+4
+5
+6
+hadoop fs -put 2016-05-30.txt /user/practical_hive/ids/2016-05-30
+
+CREATE EXTERNAL TABLE ids (a INT) PARTITIONED BY(datestamp STRING) LOCATION '/user/practical_hive/ids';
+
+ALTER TABLE ids ADD PARTITION(datestamp='2016-05-31') LOCATION '/user/practical_hive/ids/2016-05-31';
+
+ALTER TABLE ids ADD PARTITION(datestamp='2016-05-30') LOCATION '/user/practical_hive/ids/2016-05-30';
+
+USE MSCK REPAIR TABLE to add partitions for managed/internal tables:
+CREATE TABLE ids_internal (a INT) PARTITIONED BY (datestamp STRING);
+INSERT INTO ids_internal PARTITION (datestamp='2016-05-30') values (1);
+INSERT INTO ids_internal PARTITION (datestamp='2016-05-31') values (11);
+hadoop fs -mkdir /apps/hive/warehouse/ids_internal/datestamp=2016-05-21
+vi 2016-05-21.txt
+21
+22
+23
+24
+hadoop fs -put 2016-05-21.txt /apps/hive/warehouse/ids_internal/datestamp=2016-05-21
+MSCK REPAIR TABLE ids_internal;
+SHOW PARTITIONs ids_internal;
+OK
+datestamp=2016-05-21
+datestamp=2016-05-30
+datestamp=2016-05-31
+Time taken: 0.967 seconds, Fetched: 3 row(s)
+
+5) ALTER TABLE - RENAME PARTION :-> (Only External Tables)
+
+ALTER TABLE ids PARTITION (datestamp='2016-05-31') RENAME to PARTITION(datestamp='31-05-2016');
+
+6) ALTER TABLE - Modify Columns :->
+
+ALTER TABLE RETAIL.TRANSACTIONS ADD COLUMNS (loyalty_card boolean);
+
+7) DROP TABLE :->
+   DROP TABLE <TABLE_NAME>; -> Will move the table to trash
+   DROP TABLE <TABLE_NAME> PURGE; -> Will Delete from  Trash Too
+
 
 
 

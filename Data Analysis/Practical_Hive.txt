@@ -99,6 +99,12 @@ ALTER TABLE RETAIL.TRANSACTIONS ADD COLUMNS (loyalty_card boolean);
    DROP TABLE <TABLE_NAME>; -> Will move the table to trash
    DROP TABLE <TABLE_NAME> PURGE; -> Will Delete from  Trash Too
 
+   ALTER TABLE transactions DROP PARTITION (store='oakdrive');
+
+   ALTER TABLE transactions ENABLE NO_DROP;
+   ALTER TABLE transactions ENABLE OFFLINE;
+   ALTER TABLE <TABLE_NAME> PARTITION <PARTITION_SPEC> ENABLE OFFLINE;
+
 
 
 

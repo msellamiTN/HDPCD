@@ -105,6 +105,10 @@ ALTER TABLE RETAIL.TRANSACTIONS ADD COLUMNS (loyalty_card boolean);
    ALTER TABLE transactions ENABLE OFFLINE;
    ALTER TABLE <TABLE_NAME> PARTITION <PARTITION_SPEC> ENABLE OFFLINE;
 
+8) CREATE TABLE retail.transactions _top100 STORED AS ORCFILEASSELECT * FROM retail.transactions WHERE custid<101;
+
+CREATE TABLE transactions_test LIKE transactions; -> Copy only schema no data
+
 
 
 

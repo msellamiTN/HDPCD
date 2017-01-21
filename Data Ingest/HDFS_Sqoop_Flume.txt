@@ -340,7 +340,7 @@ sqoop import \
 —-password hadoop \
 --table departments \ 
 --m 1--hcatalog-database sqoop_import \ 
---hcatalog-table TEST10_ORC \
+--hcatalog-table departments_ORC \
 —-create-hcatalog-table \
 —-hcatalog-storage-stanza "stored as orcfile" \
 —-driver com.mysql.jdbc.Driver

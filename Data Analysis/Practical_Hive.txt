@@ -142,9 +142,31 @@ Create Table Using LIKE :->
 CREATE TABLE person40 LIKE person;
 INSERT INTO TABLE person40 VALUES (0,'Bob','Burger'),(1,'Charlie','Clown');
 
+Joins ->
+
+CREATE TABLE census.personname (persid int,firstname string,lastname string)
+CLUSTERED BY (persid) INTO 1 BUCKETSSTORED AS orcTBLPROPERTIES('transactional' = 'true');
+
+INSERT INTO TABLE census.personnameVALUES(0,'Albert','Ape'),(1,'Bob','Burger'),(2,'Charlie','Clown'),(3,'Danny','Drywer');
+
+CREATE TABLE census.address (persid int,postname string)CLUSTERED BY (persid) INTO 1 BUCKETSSTORED AS orcTBLPROPERTIES('transactional' = 'true');
+
+INSERT INTO TABLE census.addressVALUES(1,'KA13'),(2,'KA9'),(10,'SW1');
+
+SELECT personname.firstname,personname.lastname,address.postnameFROMcensus.personnameJOINcensus.addressON (personname.persid = address.persid);
+
+SELECT firstname,lastname,postname from personname LEFT JOIN address ON personname.persid = address.persid;
+
+SELECT firstname,lastname,postname from personname RIGHT JOIN address ON personname.persid = address.persid;
 
 
+SELECT firstname,lastname,postname from personname FULL OUTER JOIN address ON personname.persid = address.persid;
 
+SELECT personname.persid, firstname, lastname FROM personname LEFT SEMI JOIN address ON personname.persid = address.persid;
+
+CREATE TABLE census.account (persid int,bamount int)CLUSTERED BY (persid) INTO 1 BUCKETSSTORED AS orcTBLPROPERTIES('transactional' = 'true');INSERT INTO TABLE census.accountVALUES(1,12),(2,9);
+
+SELECTpersonname.firstname,personname.lastname,address.postname,account.bamountFROMcensus.personnameJOINcensus.addressON (personname.persid = address.persid)JOINcensus.accountON (personname.persid = account.persid);
 
    
     

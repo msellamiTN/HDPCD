@@ -148,7 +148,14 @@ hadoop distcp /user/hive_demo/deckofcards.txt /user/hive_Demo/cards/deckofcards.
 
     LOAD DATA LOCAL INPATH ‘/root/deckofcards.txt’ OVERWRITE INTO TABLE deck_of_cards;
 
-15) 
+15) Transactions :->
+
+    create table hive_transaction (i int, j string)
+    CLUSTERED BY (i) INTO 10 BUCKETS
+    STORED AS ORC
+    TBLPROPERTIES('transactional'='true');
+   
+    insert into table hive_transaction values(1,'itversity'),(2,'Spark');
 
 
    

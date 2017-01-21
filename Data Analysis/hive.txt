@@ -134,6 +134,22 @@ hadoop distcp /user/hive_demo/deckofcards.txt /user/hive_Demo/cards/deckofcards.
     LOCATION ‘hdfs:///apps/hive/warehouse/retail_stage.db/products’
     TBLPROPERTIES (‘avrò.schema.url’=‘hdfs://sandbox.hortonworks.com/user/Avro_Files/products.avsc’
 
+    CREATE PARTITION TABLE ->
+
+11) Bucketed Table :->
+
+12) CTAS AND ORC File Format :->
+
+13) Field Delimiters :->
+
+14) Load Data To Hive from Local File System and HDFS :->
+ 
+    LOAD DATA INPATH ‘/root/deckofcards.txt’ INTO TABLE deck_of_cards;
+
+    LOAD DATA LOCAL INPATH ‘/root/deckofcards.txt’ OVERWRITE INTO TABLE deck_of_cards;
+
+15) 
+
 
    
     

@@ -109,6 +109,40 @@ ALTER TABLE RETAIL.TRANSACTIONS ADD COLUMNS (loyalty_card boolean);
 
 CREATE TABLE transactions_test LIKE transactions; -> Copy only schema no data
 
+9) DML :->
+
+scp -P 2222 Person001.csv root@192.168.28.130:/root/data
+hadoop fs -put Person001.csv /user/hive_demo
+CREATE DATABASE census;
+USE census;
+CREATE TABLE person (persid int,lastname string,firstname string)ROW FORMAT DELIMITED FIELDS TERMINATED BY ',';
+
+LOAD DATA INPATH '/user/hive_demo/Person001.csv' OVERWRITE INTO TABLE person;
+
+CREATE TABLE personhub (persid int);
+
+INSERT OVERWRITE TABLE personhub SELECT DISTINCT persid FROM person;
+
+Writing Data to HDFS :->
+
+hadoop fs -mkdir /user/hive_demo/hive_query_output
+INSERT OVERWRITE DIRECTORY '/user/hive_demo/hive_query_output'
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+SELECT persid, firstname, lastname FROM person;
+
+Insert and Update :->
+USE census;CREATE TABLE census.person20 (persid int,lastname string,firstname string)CLUSTERED BY (persid) INTO 1 BUCKETSSTORED AS orcTBLPROPERTIES('transactional' = 'true');INSERT INTO TABLE person20 VALUES (0,'A','B'),(2,'X','Y');
+UPDATEcensus.person20SET lastname = 'SS'WHEREpersid = 0;
+
+DELETE :->
+CREATE TABLE census.person30 (persid int,lastname string,firstname string)CLUSTERED BY (persid) INTO 1 BUCKETSSTORED AS orcTBLPROPERTIES('transactional' = 'true');INSERT INTO TABLE census.person30VALUES (0,'A','B'),(2,'X','Y');
+DELETE FROM census.person30WHERE persid = 0;
+
+Create Table Using LIKE :->
+CREATE TABLE person40 LIKE person;
+INSERT INTO TABLE person40 VALUES (0,'Bob','Burger'),(1,'Charlie','Clown');
+
+
 
 
 

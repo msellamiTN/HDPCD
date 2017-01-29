@@ -362,3 +362,24 @@ DUMP X; -> (16,hdfs)
   B = LOAD '/user/pig_demo/data_union_two.txt' AS (b1:int,b2:int);
   X = UNION A,B;
 
+
+Create NYSE_DAILY Table in Hive :->
+
+create table nyse_daily(
+    > nexchange string,
+    > symbol string,
+    > DDate date,
+    > open double,
+    > high double,
+    > low double,
+    > close double,
+    > volume int,
+    > adj_close double)
+    > ROW FORMAT DELIMITED FIELDS TERMINATED BY '\t';
+
+pig -useHCatalog
+nyse_daily = LOAD 'nyse.nyse_daily' USING 'org.apache.hive.hcatalog.pig.HCatLoader()';
+describe nyse_daily;
+grp = group nyse_daily by symbol;
+symbol_count = FOREACH grp GENERATE group, COUNT_STAR(nyse_daily.symbol);
+DUMP symbol_count;
